@@ -7,5 +7,5 @@ if(fecha===fecha2){document.getElementById("alarmasonido").play();alert("Sonó s
     clearInterval(id);document.getElementById("alarmasonido").pause();
     
 }
-else {clearInterval(id)}},1000)}
+},1000)}
 //debo crear un setInterval()
