@@ -4,6 +4,8 @@ function alarma() {const id=setInterval(function set(){let fecha= new Date().toL
 hour12: false});
 let fecha2= document.getElementById("timer").value;
 if(fecha===fecha2){document.getElementById("alarmasonido").play();alert("Sonó su alarma");
-    clearInterval(id);document.getElementById("alarmasonido").pause()
-}},1000)}
+    clearInterval(id);document.getElementById("alarmasonido").pause();
+    
+}
+else {clearInterval(id)}},1000)}
 //debo crear un setInterval()
