@@ -14,7 +14,8 @@ function temporizadorUwU(){let temp=Number(document.getElementById("temporizador
         document.getElementById("seconds").textContent=temp;
     document.getElementById("minuts").textContent=minutos;
 if(temp==0 && minutos!=0){--minutos; temp=temp+60}};
-    if((temp+ minutos*60)==0){document.getElementById("alarmasonido").play();
+    if((temp+ minutos*60)==0){document.getElementById("alarmasonido").volume=1
+      ;document.getElementById("alarmasonido").play();
 clearInterval(id);alert("El tiempo ha terminado"); document.getElementById("alarmasonido").pause()
     }},1000); remoboton.remove()
 }
