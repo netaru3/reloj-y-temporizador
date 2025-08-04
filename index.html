@@ -16,7 +16,8 @@ height: 600px;}</style>
         <summary>crea un temporizador</summary>
         <input type="number" placeholder="minutos" id="minutos" style="width: 70px;"> :
         <input type="number" id="temporizador" placeholder="segundos" style="width: 70px;">
-        <button onclick="temporizadorUwU()" id="boton">Crear temporizador</button>
+        <button onclick="document.getElementById('alarmasonido').volume=0
+        ;document.getElementById('alarmasonido').play();temporizadorUwU()" id="boton">Crear temporizador</button>
         <p>tiempo:</p>
         <p style="display: inline;" id="minuts">minutos</p> <p style="display: inline;
         font-size: 9px;">min</p> 
@@ -28,7 +29,8 @@ height: 600px;}</style>
     <details>
         <summary>crea una alarma</summary>
         <input type="time" id="timer"> <p>por favor ingrese una hora</p>
-        <button onclick="alarma()" id="boton2">crea una alarma</button>
+       <button onclick="document.getElementById('alarmasonido').volume=0
+        ;document.getElementById('alarmasonido').play();alarma();" id="boton2">crea una alarma</button>
     </details>
     <audio src="alarm-clock.mp3" id="alarmasonido"></audio>
 
@@ -37,5 +39,6 @@ height: 600px;}</style>
     <script src="alarma.js"></script>
 </body>
 </html>
+
 
 
