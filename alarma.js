@@ -4,7 +4,8 @@ function alarma() {let fecha2= document.getElementById("timer").value;
   hour: '2-digit',
   minute: '2-digit',
 hour12: false});
-if(fecha===fecha2){document.getElementById("alarmasonido").play();alert("Sonó su alarma");
+if(fecha===fecha2){document.getElementById("alarmasonido").volume=1;
+  document.getElementById("alarmasonido").play();alert("Sonó su alarma");
     clearInterval(id);document.getElementById("alarmasonido").pause(); 
 }
 document.getElementById("boton2").remove();
