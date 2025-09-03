@@ -1,3 +1,2 @@
 Este reloj tiene temporizador y alarma, en algunos navegadores el sonido de la alarma puede no sonar en segundo plano (como es mi caso con operaGX).
-Como se ve, no es muy estético, pero la idea es crear algo funcional poniendo en práctica el objeto date y el DOM.
-PD: Hice que los botones desaparezcan al presionarlos ya que si los presionabas muchas veces la alarma y el temporizador se bugeaban muchísimo, y como no tengo el conocimiento técnico para ponerme a debugear esas cosas (por ahora), hice que los botones se eliminasen, si quieren volver a hacer otra alarma, tan solo reinicien la página.
+La estética la hizo Claude.ai, el resto lo hice yo poniendo en práctica el objeto date y el DOM.
