@@ -605,7 +605,7 @@
                 
                 // Verificar si terminó
                 if (totalSegundos === 0 && r===0) {
-                    document.getElementById("alarmasonido").volume = 1; ++r;
+                    document.getElementById("alarmasonido").volume = 1; ++r; console.log("alarma.mp3");
                     document.getElementById("alarmasonido").play();
                     
                     let confir = confirm("¡El tiempo ha terminado!");
@@ -615,7 +615,7 @@
                     }
                     
                     resetearTemporizador();
-                }
+                } //if(typeof confir!=="function"){document.getElementById("alarmasonido").pause()}
             }, 1000);
         }
 
