@@ -115,7 +115,7 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            max-height: 500px;
+            max-height: 600px;
         }
 
         .card::before {
@@ -333,11 +333,19 @@
             }
             
             #tiempo {
-                font-size: 2.5rem;
+                font-size: 2rem;
             }
             
             .container {
                 padding: 1rem;
+            }
+            
+            .card {
+                max-height: none;
+            }
+            
+            .timer-time {
+                font-size: 2rem;
             }
         }
 
@@ -367,6 +375,14 @@
         .status.inactive {
             background: rgba(255, 255, 255, 0.1);
             color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Botón contenedor */
+        .button-container {
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
@@ -408,9 +424,11 @@
                         <label class="input-label">Hora de la alarma (HH:MM)</label>
                         <input type="time" id="timer" class="time-input" placeholder="Ej: 14:30">
                     </div>
-                    <button class="btn" id="boton2" onclick="alarma()">
-                        🔔 Activar Alarma
-                    </button>
+                    <div class="button-container">
+                        <button class="btn" id="boton2" onclick="alarma()">
+                            🔔 Activar Alarma
+                        </button>
+                    </div>
                     <div class="status inactive" id="alarmStatus">Alarma inactiva</div>
                 </div>
             </div>
@@ -443,9 +461,11 @@
                         </div>
                     </div>
                     
-                    <button class="btn" id="boton" onclick="temporizadorUwU()">
-                        ▶️ Iniciar Temporizador
-                    </button>
+                    <div class="button-container" id="timerButtonContainer">
+                        <button class="btn" id="boton" onclick="temporizadorUwU()">
+                            ▶️ Iniciar Temporizador
+                        </button>
+                    </div>
                     <div class="status inactive" id="timerStatus">Temporizador detenido</div>
                 </div>
             </div>
@@ -453,6 +473,10 @@
     </div>
 
     <script>
+        // Variables globales para controlar los intervalos
+        let alarmInterval = null;
+        let timerInterval = null;
+
         // Crear partículas de fondo
         function createTimeParticles() {
             const container = document.querySelector('.bg-elements');
@@ -466,9 +490,8 @@
             }
         }
 
-        // Tu código de reloj.js
+        // Reloj en tiempo real
         let tiempo = new Date();
-        let i = 0;
         setInterval(function() {
             let tiempo = new Date();
             let ahora = tiempo.toLocaleTimeString([], {
@@ -480,12 +503,17 @@
             document.getElementById("tiempo").textContent = ahora;
         }, 1000);
 
-        // Tu código de alarma.js (mejorado)
-        function alarma() {
+        // Función de alarma mejorada
+        function alarma() { let a=0
             let fecha2 = document.getElementById("timer").value;
             if (fecha2 == "") {
                 alert("Ingrese un tiempo en la alarma");
                 return;
+            }
+            
+            // Limpiar intervalo previo si existe
+            if (alarmInterval) {
+                clearInterval(alarmInterval);
             }
             
             // Actualizar estado visual
@@ -493,47 +521,63 @@
             alarmStatus.textContent = `Alarma activa: ${fecha2}`;
             alarmStatus.className = "status active";
             
-            const id = setInterval(function set() {
+            const button = document.getElementById("boton2");
+            button.textContent = "🔕 Cancelar Alarma";
+            button.onclick = cancelarAlarma;
+            
+            alarmInterval = setInterval(function() {
                 let fecha = new Date().toLocaleTimeString([], {
                     hour: '2-digit',
                     minute: '2-digit',
                     hour12: false
                 });
                 
-                if (fecha === fecha2) {
+                if (fecha === fecha2 && a===0) { ++a
                     document.getElementById("alarmasonido").volume = 1;
                     document.getElementById("alarmasonido").play();
                     alert("¡Sonó su alarma!");
-                    clearInterval(id);
-                    document.getElementById("alarmasonido").pause();
                     
-                    // Resetear estado
-                    alarmStatus.textContent = "Alarma inactiva";
-                    alarmStatus.className = "status inactive";
-                    
-                    // Recrear botón
-                    const newButton = document.createElement("button");
-                    newButton.className = "btn";
-                    newButton.id = "boton2";
-                    newButton.onclick = alarma;
-                    newButton.innerHTML = "🔔 Activar Alarma";
-                    document.querySelector(".alarm-section").appendChild(newButton);
+                    // Resetear alarma
+                    resetearAlarma();
                 }
             }, 1000);
-            
-            document.getElementById("boton2").remove();
         }
 
-        // Tu código de temporizador.js (mejorado)
-        let remoboton = document.getElementById("boton");
+        function cancelarAlarma() {
+            if (alarmInterval) {
+                clearInterval(alarmInterval);
+                alarmInterval = null;
+            }
+            resetearAlarma();
+        }
 
+        function resetearAlarma() {
+            const alarmStatus = document.getElementById("alarmStatus");
+            alarmStatus.textContent = "Alarma inactiva";
+            alarmStatus.className = "status inactive";
+            
+            const button = document.getElementById("boton2");
+            button.textContent = "🔔 Activar Alarma";
+            button.onclick = alarma;
+            
+            document.getElementById("alarmasonido").pause();
+            document.getElementById("alarmasonido").currentTime = 0;
+        }
+
+        // Función de temporizador mejorada
         function temporizadorUwU() {
-            let temp = Number(document.getElementById("temporizador").value)-1;
+            let temp = Number(document.getElementById("temporizador").value);
             let minutos = Number(document.getElementById("minutos").value);
             
-            if (temp === 0 && minutos === 0) {
-                alert("Ingrese un tiempo válido");
+            // Validación mejorada
+            if ((temp === 0 || isNaN(temp)) && (minutos === 0 || isNaN(minutos))) {
+                alert("Ingrese un tiempo válido (minutos y/o segundos)");
                 return;
+            }
+            
+            // Limpiar intervalo previo si existe
+            if (timerInterval) {
+                clearInterval(timerInterval);
             }
             
             // Actualizar estado visual
@@ -541,46 +585,60 @@
             timerStatus.textContent = "Temporizador activo";
             timerStatus.className = "status active";
             
-            let id = setInterval(function() {
-                if (temp >= 0) {
-                    document.getElementById("seconds").textContent = temp.toString().padStart(2, '0');
-                    document.getElementById("minuts").textContent = minutos.toString().padStart(2, '0');
-                    
-                    
-                    if (temp == 0 && minutos != 0) {
-                        --minutos;
-                        temp = temp + 59;
-                    }
-                }
+            // Cambiar botón a cancelar
+            const buttonContainer = document.getElementById("timerButtonContainer");
+            buttonContainer.innerHTML = '<button class="btn" onclick="cancelarTemporizador()">⏹️ Cancelar Temporizador</button>';
+            
+            // Convertir todo a segundos para facilitar el cálculo
+            let totalSegundos = (minutos * 60) + temp;
+            let r=0
+            timerInterval = setInterval(function() {
+               if (totalSegundos>0) {totalSegundos--};
                 
-                if ((temp + minutos * 60) == 0) {
-                    document.getElementById("alarmasonido").volume = 1;
-                    --temp;
+                // Calcular minutos y segundos restantes
+                let minutosRestantes = Math.floor(totalSegundos / 60);
+                let segundosRestantes = totalSegundos % 60;
+                
+                // Actualizar display
+                document.getElementById("minuts").textContent = minutosRestantes.toString().padStart(2, '0');
+                document.getElementById("seconds").textContent = segundosRestantes.toString().padStart(2, '0');
+                
+                // Verificar si terminó
+                if (totalSegundos === 0 && r===0) {
+                    document.getElementById("alarmasonido").volume = 1; ++r;
                     document.getElementById("alarmasonido").play();
                     
                     let confir = confirm("¡El tiempo ha terminado!");
                     if (confir === true) {
                         document.getElementById("alarmasonido").pause();
+                        document.getElementById("alarmasonido").currentTime = 0;
                     }
-                    clearInterval(id);
                     
-                    // Resetear estado
-                    timerStatus.textContent = "Temporizador detenido";
-                    timerStatus.className = "status inactive";
-                    
-                    // Recrear botón
-                    const newButton = document.createElement("button");
-                    newButton.className = "btn";
-                    newButton.id = "boton";
-                    newButton.onclick = temporizadorUwU;
-                    newButton.innerHTML = "▶️ Iniciar Temporizador";
-                    document.querySelector(".timer-section").appendChild(newButton);
-                } if (temp !== 0) {
-                        --temp;
-                    }
+                    resetearTemporizador();
+                }
             }, 1000);
+        }
+
+        function cancelarTemporizador() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+            resetearTemporizador();
+        }
+
+        function resetearTemporizador() {
+            const timerStatus = document.getElementById("timerStatus");
+            timerStatus.textContent = "Temporizador detenido";
+            timerStatus.className = "status inactive";
             
-            remoboton.remove();
+            // Restaurar botón original
+            const buttonContainer = document.getElementById("timerButtonContainer");
+            buttonContainer.innerHTML = '<button class="btn" id="boton" onclick="temporizadorUwU()">▶️ Iniciar Temporizador</button>';
+            
+            // Resetear display
+            document.getElementById("minuts").textContent = "00";
+            document.getElementById("seconds").textContent = "00";
         }
 
         // Inicializar
